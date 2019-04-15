@@ -17,8 +17,9 @@ void setup(){
 void draw(){
  background(15);
  translate(width/2, height/2);
- rotateX(map(mouseX,0,width,-PI,PI));
- rotateY(map(mouseY,0,height,PI,-PI));
+ rotateY(map(mouseX,0,width,-PI,PI));
+ rotateX(map(mouseY,0,height,PI,-PI));
  scale(1,-1,1);
+ stroke(240);
   
 }
