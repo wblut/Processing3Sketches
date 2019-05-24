@@ -46,6 +46,11 @@ void drawChar3x3(char c, float lx, float ly, float size) {
 }
 
 int code3x3(char c) {
+  /*
+   1 |   2 |   4
+   8 |  16 |  32
+  64 | 128 | 256
+  */
   switch(c) {
   case 'a':
     return 378;
@@ -172,6 +177,21 @@ void drawChar3xN(char c, float lx, float ly, int height, float size) {
 }
 
 int[] code3xN(char c) {
+  /*
+  
+  1 | 2 | 4
+  
+  0
+  1
+  2
+  3
+  .
+  .
+  3
+  4
+  5
+  
+  */
   switch(c) {
   case '/':
     return new int[]{4, 4, 2, 2, 1, 1};
