@@ -24,7 +24,7 @@ void setup() {
   I=128;
   J=128;
   K=128;
-  scale=3.5;
+  scale=4.2;
   seed=(int)random(1000000);
   noiseSeed(seed);
   randomSeed(seed);
@@ -57,17 +57,12 @@ void draw() {
     if (!saveSVG) background(255);
     noFill();
     strokeWeight(2*stroke);
-    /*
-    noStroke();
-    iso.drawFaces();
-    */
     stroke(0);
     iso.drawEdges();
-    
     if (saveFrame == true) {
       if (!savePDF && ! saveSVG) {
         savePDF=true;
-      } else if (! saveSVG) {
+      } if (! saveSVG) {
         println("End record PDF");
         endRecord(); 
         savePDF=false;
@@ -77,6 +72,7 @@ void draw() {
         endRecord(); 
         saveFrame=false;
         saveSVG=false;
+        save("saves/"+name+".png");
       }
     }
   } else {
@@ -128,6 +124,7 @@ void keyPressed() {
       java.util.Date dNow = new java.util.Date( );
       java.text.SimpleDateFormat ft = new java.text.SimpleDateFormat ("yyyy_MM_dd_HHmmss_S");
       name="iso"+"_"+ft.format(dNow);
+      iso.cubes.export(sketchPath("saves/"+name+".obj"));
     } else if (key=='q') {
       iso.refineGrid();
       iso.mapCubeGridToHexGrid();
