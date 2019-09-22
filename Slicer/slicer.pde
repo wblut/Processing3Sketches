@@ -1,3 +1,4 @@
+
 import wblut.math.*;
 import wblut.hemesh.*;
 import wblut.core.*;
@@ -16,7 +17,7 @@ WB_Render3D render;
 int maxLevel;
 
 int numFrames;
-int frameCounter;
+int frameCountWithDelay;
 float hueshift;
 int slices;
 float rotationDirection,  rotationRange;
@@ -60,7 +61,7 @@ void init() {
     fragmentTreeSplit();
     AABB=fragmentTree.determineAABB();
   }
-  frameCounter=0;
+  frameCountWithDelay=0;
   shift=new WB_Point(); 
 }
 
@@ -130,20 +131,20 @@ void fragmentTreeSplit() {
 
 void draw() {
   if (frameCount<numFrames/2) {
-    frameCounter=frameCount;
+    frameCountWithDelay=frameCount;
   } else if (frameCount>numFrames/2+19) {
-    frameCounter=frameCount-19;
+    frameCountWithDelay=frameCount-19;
   } else {
-    frameCounter=numFrames/2;
+    frameCountWithDelay=numFrames/2;
   }
   if (ORTHO) ortho();
   translate(width / 2, height / 2);
-  float phase = map(frameCounter-1 , 0, numFrames, 0, 1);
+  float phase = map(frameCountWithDelay-1 , 0, numFrames, 0, 1);
   float phase2 = map(frameCount-1 , 0, (numFrames+20), 0, 1);
   float angle=phase*TWO_PI;
   float f=(0.5-0.5*cos(angle))*maxLevel;
   background(50);//(hueshift+128)%256,40,50);
-  AABB=fragmentTree.determineAABB(f, frameCounter-1);
+  AABB=fragmentTree.determineAABB(f, frameCountWithDelay-1);
   shift.mulAddMulSelf(0.5, 0.5, AABB.getCenter());
   pushMatrix();  
   fill(0);
@@ -153,10 +154,10 @@ void draw() {
   }
   rotate(phase2);
   translate(-shift.xf(), -shift.yf(), -shift.zf());
-  fragmentTree.draw(f, frameCounter-1);
+  fragmentTree.draw(f, frameCountWithDelay-1);
   popMatrix();
 
-  if (frameCounter==numFrames) {
+  if (frameCountWithDelay==numFrames) {
     frameCount=0;
     maxLevel=0;
     init();
@@ -186,7 +187,7 @@ void rotate(float phase2) {
   }
 
   void split(final Movement M) {
-    root.split(M,random(2,6)*10);
+    root.split(M);
   }
 
   WB_AABB determineAABB(double f, int counter) {
@@ -245,7 +246,7 @@ class Fragment {
     
   }
 
-  void split(Movement M, double sep) {
+  void split(Movement M) {
     if ((child0 == null) && (child1 == null)) {
       HE_Mesh split=mesh.get();
       split.removeSelection("caps");
@@ -271,10 +272,10 @@ class Fragment {
       }
     } else {
       if (child0 != null) {
-        child0.split(M,sep);
+        child0.split(M);
       }
       if (child1 != null) {
-        child1.split(M,sep);
+        child1.split(M);
       }
      
 
