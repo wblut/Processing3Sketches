@@ -14,7 +14,7 @@ void setup() {
   fullScreen(P3D);
   smooth(8);
   render=new WB_Render3D(this);
-  WB_PointGenerator pg=new WB_RandomRectangle().setSize(800, 800);
+  WB_PointFactory pg=new WB_RandomRectangle().setSize(800, 800);
   spheres=new ArrayList<Sphere>();
   num=200;
 
@@ -39,24 +39,22 @@ void setup() {
 void draw() {
   background(15);
   translate(width/2, height/2);
+  lights();
+
   rotateY(map(mouseX, 0, width, -PI, PI));
   rotateX(map(mouseY, 0, height, PI, -PI));
-  lights();
-  scale(1, -1, 1);
- 
+  
   noStroke();
   for (Sphere S : spheres) {
-    render.drawFaces(S.mesh);
+    shape(S.shape);
   }
-  stroke(240);
-  for (Sphere S : spheres) {
-    render.drawEdges(S.mesh);
-  }
+
 }
 
 void processIntersections() {
   Sphere S1, S2;
   WB_Plane P;
+  
   for (int i=0; i<num; i++) {
     S1=spheres.get(i);
     for (int j=i+1; j<num; j++) {
@@ -77,27 +75,30 @@ void processIntersections() {
       HE_Vertex v;
       while (vItr.hasNext()) {
         v=vItr.next();
-        if (WB_GeometryOp.classifyPointToPlane3D(P, v)==WB_Classification.FRONT) {
-          v.set(WB_GeometryOp.projectOnPlane(v.getPosition(), P));
+        if (WB_GeometryOp3D.classifyPointToPlane3D(P, v)==WB_Classification.FRONT) {
+          v.set(WB_GeometryOp3D.projectOnPlane(v.getPosition(), P));
         }
       }
       vItr=S2.mesh.vItr();
       while (vItr.hasNext()) {
         v=vItr.next();
-        if (WB_GeometryOp.classifyPointToPlane3D(P, v)==WB_Classification.BACK) {
-          v.set(WB_GeometryOp.projectOnPlane(v.getPosition(), P));
+        if (WB_GeometryOp3D.classifyPointToPlane3D(P, v)==WB_Classification.BACK) {
+          v.set(WB_GeometryOp3D.projectOnPlane(v.getPosition(), P));
         }
       }
     }
   }
    for (int i=0; i<num; i++) {
     spheres.get(i).mesh.smooth();
+    spheres.get(i).shape=WB_PShapeFactory.createSmoothPShape(spheres.get(i).mesh,this);
+    spheres.get(i).shape.disableStyle();
    }
 }
 
 
 class Sphere {
   HE_Mesh mesh;
+  PShape shape;
   WB_Coord center;
   double radius;
 
