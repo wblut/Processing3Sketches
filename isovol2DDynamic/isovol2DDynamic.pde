@@ -31,8 +31,8 @@ void draw() {
   
   translate(width/2, height/2);
   lights();
-  rotateY(-0.0471);//map(mouseX, 0, width, -PI, PI));
-  rotateX(0.5027);//map(mouseY, 0, height, PI, -PI));
+  rotateY(map(mouseX, 0, width, -PI, PI));
+  rotateX(map(mouseY, 0, height, PI, -PI));
   isotriangles2=getTriangles(-1.0, 1.0, color(255));
   noFill();
   stroke(0);
@@ -45,7 +45,6 @@ void draw() {
     fill(triangle.col);
     triangle.draw();
   }
-saveFrame("/frames/frame###.gif");
    
   
 }
