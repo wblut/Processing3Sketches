@@ -17,7 +17,7 @@ void create() {
   vorPoints = new ArrayList<PVector> ();
   int numPoints =100;
   for (int i=0; i<numPoints; i++) {
-    vorPoints.add(new PVector(random(-150, 150), random(-150, 150), random(-300, 200)));
+    vorPoints.add(new PVector(random(-110, 110), random(-110, 110), random(-300, 200)));
   }
   boolean empty;
   GAP=10;
@@ -50,12 +50,18 @@ void draw() {
   rotateY(map(mouseX, 0, width, -PI, PI));
   rotateX(map(mouseY, 0, height, PI, -PI));
   hint(DISABLE_DEPTH_MASK);
+  strokeWeight(1);
   stroke(0);
   fill(0, 25);
   for (SliceBox vorCell : vorCells) {
     vorCell.draw();
   }
   hint(ENABLE_DEPTH_MASK);
+  strokeWeight(4);
+  stroke(255,0,0);
+  for (PVector vorPoint : vorPoints) {
+    point(vorPoint.x,vorPoint.y,vorPoint.z);
+  }
 }
 
 
