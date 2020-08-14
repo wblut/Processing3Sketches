@@ -185,7 +185,7 @@ class SliceBox {
 
 
   void createPrismWithCenterRadiusAndHeight(int N, float x, float y, float z, float radius, float height) {
-    createPrismWithCenterRadiusRangeAndHeight(N,x,y,z,radius,radius,height);
+    createPrismWithCenterRadiusRangeAndHeight(N, x, y, z, radius, radius, height);
   }
 
   void createPrismWithCenterRadiusRangeAndHeight(int N, float x, float y, float z, float minRadius, float maxRadius, float height) {
@@ -202,15 +202,17 @@ class SliceBox {
     faces[0]=new int[N];
     faces[1]=new int[N];
     for (int i=0; i<N; i++) {
-      faces[0][i]=i;
-      faces[1][i]=2*N-1-i;
+      faces[0][i]=N-1-i;
+      faces[1][i]=N+i;
     }
     for (int i=0; i<N; i++) {
       faces[i+2]=new int[4];
-      faces[i+2][0]=(i+1)%N;
-      faces[i+2][1]=i;
+      
+      faces[i+2][0]=i;
+      faces[i+2][1]=(i+1)%N;
       faces[i+2][2]=faces[i+2][1]+N;
       faces[i+2][3]=faces[i+2][0]+N;
+      
     }
 
     create(vertices, faces);
@@ -245,6 +247,10 @@ class SliceBox {
   }
 
 
+
+
+
+
   void createRaw(float[][] vertexArray, int[][] faceArray, int[] halfedgePairArray) {
     initialize();
     for (float[] vertex : vertexArray) {
@@ -256,7 +262,6 @@ class SliceBox {
     createEdges(halfedgePairArray);
     toPShape();
   }
-
 
 
   void toPShape() {
@@ -662,5 +667,42 @@ class SliceBox {
       if (he.prev.next!=he) return false;
     }
     return true; //maybe
+  }
+
+  void triangulate() {
+    int numberOfTriangles=0;
+    int[][] faces=copyFaceArray();
+    for (int[] face : faces) {
+      numberOfTriangles+=face.length-2;
+    }
+    int[][] triFaces=new int[numberOfTriangles][];
+    int index=0;
+    for (int[] face : faces) {
+      for (int i=1; i<face.length-1; i++) {
+        triFaces[index++]=new int[]{face[0], face[i], face[i+1]};
+      }
+    }
+    create(copyVertexArray(), triFaces);
+    
+  }
+
+  void save(String path) {
+    SliceBox copy=copy();
+    copy.triangulate();
+    PrintWriter out=createWriter(path);
+    for (Vertex v : copy.vertices) {
+      out.println("v "+v.x+" "+v.y+" "+v.z);
+    }
+    Halfedge he;
+    for (Face f : copy.faces) {
+      out.print("f");
+      he=f.he;
+      do {
+        out.print(" "+(he.v.index+1));
+        he=he.next;
+      } while (he!=f.he);
+      out.println();
+    }
+    out.flush();
   }
 }

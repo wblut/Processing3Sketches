@@ -44,6 +44,7 @@ void create() {
   rotation=180.0/N;// half a division rotated
   carveCrystal(crystal, radius, N, 0.5*prismHeight, heightSpread, inclination, inclinationSpread, penetration, penetrationSpread, rotation, rotationSpread, false, minorPlanes);
   carveCrystal(crystal, radius, N, 0.5*prismHeight, heightSpread, inclination, inclinationSpread, penetration, penetrationSpread, rotation, rotationSpread, true, minorPlanes);
+crystal.save(sketchPath("output.obj"));
 }
 
 void carveCrystal(SliceBox crystal, float radius, int N, float height, float heightSpread, float inclination, float inclinationSpread, float penetration, float penetrationSpread, float rotation, float rotationSpread, boolean invert, ArrayList<Plane> planes) {
