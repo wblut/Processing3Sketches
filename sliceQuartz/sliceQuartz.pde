@@ -19,7 +19,7 @@ void create() {
   int N=6;
   stock.createPrismWithCenterRadiusRangeAndHeight(N, 0, 0, 0, 0.9*radius, 1.1*radius, 1.6*prismHeight);
   
-  //Carve a crystal form the stock, by slicing it with an "unmbrella" of planes
+  //Carve a crystal from the stock, by slicing it with an "umbrella" of planes
  
   crystal=stock.copy();
   //Hieght of origin of slicing planes
