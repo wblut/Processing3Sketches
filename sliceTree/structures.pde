@@ -702,4 +702,48 @@ class SliceBox {
     }
     return true; //maybe
   }
+  
+   void triangulate() {
+    int numberOfTriangles=0;
+    int[][] faces=copyFaceArray();
+    color[] colors=copyFaceColor();
+    for (int[] face : faces) {
+      numberOfTriangles+=face.length-2;
+    }
+    int[][] triFaces=new int[numberOfTriangles][];
+    color[] triColors=new color[numberOfTriangles];
+    int index=0;
+    int fc=0;
+    for (int[] face : faces) {
+      for (int i=1; i<face.length-1; i++) {
+        
+        triFaces[index]=new int[]{face[0], face[i], face[i+1]};
+        triColors[index]=colors[fc];
+        index++;
+      }
+      fc++;
+    }
+    create(copyVertexArray(), triFaces, triColors);
+    
+  }
+  
+  void save(String path) {
+    SliceBox copy=copy();
+    copy.triangulate();
+    PrintWriter out=createWriter(path);
+    for (Vertex v : copy.vertices) {
+      out.println("v "+v.x+" "+v.y+" "+v.z);
+    }
+    Halfedge he;
+    for (Face f : copy.faces) {
+      out.print("f");
+      he=f.he;
+      do {
+        out.print(" "+(he.v.index+1));
+        he=he.next;
+      } while (he!=f.he);
+      out.println();
+    }
+    out.flush();
+  }
 }
