@@ -74,6 +74,7 @@ Transformation sliceAndRotate(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (xRolls.contains(roll));
     xRolls.add(roll);
+    roll+=random(-0.1,0.1);
     origin=new PVector(-50+100*0.05*roll, 0, 0);
     normal=new PVector(random(100)<50?1:-1, 0, 0);
     break;
@@ -82,6 +83,7 @@ Transformation sliceAndRotate(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (yRolls.contains(roll));
     yRolls.add(roll);
+    roll+=random(-0.1,0.1);
     origin=new PVector(0, -50+100*0.05*roll, 0);
     normal=new PVector(0, random(100)<50?1:-1, 0);
     break;
@@ -90,6 +92,7 @@ Transformation sliceAndRotate(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (zRolls.contains(roll));
     zRolls.add(roll);
+    roll+=random(-0.1,0.1);
     origin=new PVector(0, 0, -50+100*0.05*roll);
     normal=new PVector(0, 0, random(100)<50?1:-1);
   }
@@ -112,6 +115,7 @@ Transformation sliceAndTranslate(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (xRolls.contains(roll));
     xRolls.add(roll);
+    roll+=random(-0.1,0.1);
     origin=new PVector(-50+100*0.05*roll, 0, 0);
     normal=new PVector(random(100)<50?1:-1, 0, 0);
     direction=new PVector(0, random(100)<50?1:-1, 0);
@@ -121,6 +125,7 @@ Transformation sliceAndTranslate(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (yRolls.contains(roll));
     yRolls.add(roll);
+    roll+=random(-0.1,0.1);
     origin=new PVector(0, -50+100*0.05*roll, 0);
     normal=new PVector(0, random(100)<50?1:-1, 0);
     direction=new PVector(0, 0, random(100)<50?1:-1);
@@ -130,6 +135,7 @@ Transformation sliceAndTranslate(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (zRolls.contains(roll));
     zRolls.add(roll);
+    roll+=random(-0.1,0.1);
     origin=new PVector(0, 0, -50+100*0.05*roll);
     normal=new PVector(0, 0, random(100)<50?1:-1); 
     direction=new PVector(random(100)<50?1:-1, 0, 0);
@@ -139,6 +145,7 @@ Transformation sliceAndTranslate(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (xRolls.contains(roll));
     xRolls.add(roll);
+    roll+=random(-0.1,0.1);
     origin=new PVector(-50+100*0.05*roll, 0, 0);
     normal=new PVector(random(100)<50?1:-1, 0, 0);
     direction=new PVector(0, 0, random(100)<50?1:-1);
@@ -148,6 +155,7 @@ Transformation sliceAndTranslate(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (yRolls.contains(roll));
     yRolls.add(roll);
+    roll+=random(-0.1,0.1);
     origin=new PVector(0, -50+100*0.05*roll, 0);
     normal=new PVector(0, random(100)<50?1:-1, 0);
     direction=new PVector(random(100)<50?1:-1, 0, 0);
@@ -157,6 +165,7 @@ Transformation sliceAndTranslate(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (zRolls.contains(roll));
     zRolls.add(roll);
+    roll+=random(-0.1,0.1);
     origin=new PVector(0, 0, -50+100*0.05*roll);
     normal=new PVector(0, 0, random(100)<50?1:-1); 
     direction=new PVector(0, random(100)<50?1:-1, 0);
@@ -182,6 +191,7 @@ Transformation sliceAndShear(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (xRolls.contains(roll));
     xRolls.add(roll);
+    roll+=random(-0.1,0.1);
     origin=new PVector(-150+300*0.05*roll, 0, 0);
     normal=new PVector(random(100)<50?1:-1, 0, 0);
     direction=new PVector(0, random(100)<50?1:-1, 0);
@@ -191,6 +201,7 @@ Transformation sliceAndShear(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (yRolls.contains(roll));
     yRolls.add(roll);
+    roll+=random(-0.1,0.1);
     origin=new PVector(0, -150+300*0.05*roll, 0);
     normal=new PVector(0, random(100)<50?1:-1, 0);
     direction=new PVector(0, 0, random(100)<50?1:-1);
@@ -200,6 +211,7 @@ Transformation sliceAndShear(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (zRolls.contains(roll));
     zRolls.add(roll);
+    roll+=random(-0.1,0.1);
     origin=new PVector(0, 0, -150+300*0.05*roll);
     normal=new PVector(0, 0, random(100)<50?1:-1); 
     direction=new PVector(random(100)<50?1:-1, 0, 0);
@@ -209,6 +221,7 @@ Transformation sliceAndShear(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (xRolls.contains(roll));
     xRolls.add(roll);
+    roll+=random(-0.1,0.1);
     origin=new PVector(-150+300*0.05*roll, 0, 0);
     normal=new PVector(random(100)<50?1:-1, 0, 0);
     direction=new PVector(0, 0, random(100)<50?1:-1);
@@ -218,6 +231,7 @@ Transformation sliceAndShear(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (yRolls.contains(roll));
     yRolls.add(roll);
+    roll+=random(-0.1,0.1);
     origin=new PVector(0, -150+300*0.05*roll, 0);
     normal=new PVector(0, random(100)<50?1:-1, 0);
     direction=new PVector(random(100)<50?1:-1, 0, 0);
@@ -227,6 +241,7 @@ Transformation sliceAndShear(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (zRolls.contains(roll));
     zRolls.add(roll);
+    roll+=random(-0.1,0.1);
     origin=new PVector(0, 0, -150+300*0.05*roll);
     normal=new PVector(0, 0, random(100)<50?1:-1); 
     direction=new PVector(0, random(100)<50?1:-1, 0);
@@ -248,6 +263,7 @@ Transformation sliceAndStretch(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (xRolls.contains(roll));
     xRolls.add(roll);
+    roll+=random(-0.1,0.1);
     origin=new PVector(-50+100*0.05*roll, 0, 0);
     normal=new PVector(random(100)<50?1:-1, 0, 0);
     break;
@@ -256,6 +272,7 @@ Transformation sliceAndStretch(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (yRolls.contains(roll));
     yRolls.add(roll);
+    roll+=random(-0.1,0.1);
     origin=new PVector(0, -50+100*0.05*roll, 0);
     normal=new PVector(0, random(100)<50?1:-1, 0);
     break;
@@ -264,6 +281,7 @@ Transformation sliceAndStretch(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (zRolls.contains(roll));
     zRolls.add(roll);
+    roll+=random(-0.1,0.1);
     origin=new PVector(0, 0, -50+100*0.05*roll);
     normal=new PVector(0, 0, random(100)<50?1:-1);
   }
@@ -278,7 +296,7 @@ void draw() {
   lights();
   rotateY(map(mouseX, 0, width, -PI, PI));
   rotateX(map(mouseY, 0, height, PI, -PI));
-scale(zoom);
+  scale(zoom);
   hint(ENABLE_DEPTH_MASK);
   noStroke();
   fill(255);

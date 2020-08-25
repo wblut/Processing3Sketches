@@ -24,9 +24,9 @@ class Plane {
   Plane offset(float d) {
     return new Plane(PVector.add(origin, PVector.mult(normal, d)), normal);
   }
-  
-   Plane flip() {
-    return new Plane(origin, PVector.mult(normal,-1));
+
+  Plane flip() {
+    return new Plane(origin, PVector.mult(normal, -1));
   }
 
   void draw(float side) {
@@ -72,7 +72,7 @@ class Vertex {
     this.index=i;
   }
 
-   int sideOfPlane(Plane P) {
+  int sideOfPlane(Plane P) {
     float signedDistance = P.normal.dot(new PVector(x-P.origin.x, y- P.origin.y, z-P.origin.z));
     return (signedDistance>EPS)?1:(signedDistance<-EPS)?-1:0;
   }
@@ -105,7 +105,7 @@ class Face {
     return order;
   }
 
- int sideOfPlane(Plane P) {
+  int sideOfPlane(Plane P) {
     Halfedge lhe=he;
     int sideOfVertex;
     int plus=0;
@@ -159,7 +159,7 @@ class SliceBox {
       scaledVertices[i][1]=y+vertices[i][1]*height;
       scaledVertices[i][2]=z+vertices[i][2]*depth;
     }
-    createRaw(scaledVertices, faces, halfedgePairs, new color[]{col,col,col,col,col,col});
+    createRaw(scaledVertices, faces, halfedgePairs, new color[]{col, col, col, col, col, col});
   }
 
   void createBoxWithCornerAndSize(float x, float y, float z, float width, float height, float depth, color[] col) {
@@ -185,11 +185,11 @@ class SliceBox {
       createFace(face, col[i++]);
     }
     createEdges(halfedgePairArray);
-    //toPShape();
+    toPShape();
   }
-  
-  
-   void createOcathedronWithCenterAndSize(float x, float y, float z, float width, float height, float depth, color col) {
+
+
+  void createOcathedronWithCenterAndSize(float x, float y, float z, float width, float height, float depth, color col) {
     float[][] vertices=new float[][]{{-0.5, 0, 0}, {0, 0.5, 0}, {0.5, 0, 0}, {0, -0.5, 0}, {0, 0, 0.5}, {0, 0, -0.5}};
     int[][] faces=new int[][]{{0, 1, 4}, {1, 2, 4}, {2, 3, 4}, {3, 0, 4}, {1, 0, 5}, {2, 1, 5}, {3, 2, 5}, {0, 3, 5}};
     int[] halfedgePairs=new int[]{12, 5, 10, 15, 8, 1, 18, 11, 4, 21, 2, 7, 0, 23, 16, 3, 14, 19, 6, 17, 22, 9, 20, 13};
@@ -199,17 +199,17 @@ class SliceBox {
       scaledVertices[i][1]=y+vertices[i][1]*height;
       scaledVertices[i][2]=z+vertices[i][2]*depth;
     }
-    createRaw(scaledVertices, faces, halfedgePairs, new color[]{col,col,col,col,col,col,col,col});
+    createRaw(scaledVertices, faces, halfedgePairs, new color[]{col, col, col, col, col, col, col, col});
   }
 
 
   void createPrismWithCenterRadiusAndHeight(int N, float x, float y, float z, float radius, float height, color col) {
-    createPrismWithCenterRadiusRangeAndHeight(N, x, y, z, radius, radius, height,  col);
+    createPrismWithCenterRadiusRangeAndHeight(N, x, y, z, radius, radius, height, col);
   }
 
   void createPrismWithCenterRadiusRangeAndHeight(int N, float x, float y, float z, float minRadius, float maxRadius, float height, color col) {
     float[][] vertices=new float[2*N][3];
-   
+
     float radius;
     for (int i=0; i<N; i++) {
       radius=random(minRadius, maxRadius);
@@ -217,10 +217,9 @@ class SliceBox {
       vertices[i][1]=vertices[i+N][1]=sin(TWO_PI/N*i)*radius+y;
       vertices[i][2]=-height/2+z;
       vertices[i+N][2]=height/2+z;
-
     }
     int[][] faces =new int[N+2][];
-     color[] cols=new color[N+2];
+    color[] cols=new color[N+2];
     faces[0]=new int[N];
     faces[1]=new int[N];
     cols[0]=col;
@@ -231,13 +230,12 @@ class SliceBox {
     }
     for (int i=0; i<N; i++) {
       faces[i+2]=new int[4];
-      
+
       faces[i+2][0]=i;
       faces[i+2][1]=(i+1)%N;
       faces[i+2][2]=faces[i+2][1]+N;
       faces[i+2][3]=faces[i+2][0]+N;
       cols[i+2]=col;
-      
     }
 
     create(vertices, faces, cols);
@@ -268,15 +266,8 @@ class SliceBox {
         }
       }
     }
-    createRaw(vertexArray, faceArray, halfedgePairArray,col);
+    createRaw(vertexArray, faceArray, halfedgePairArray, col);
   }
-
-
-
-
-
-
-
 
   void toPShape() {
     /*
@@ -439,10 +430,10 @@ class SliceBox {
     he.pair.e=e;
   }
 
-   void slice(Plane P, float offset, color col) {
-     Plane offsetP=P.offset(offset);
+  void slice(Plane P, float offset, color col) {
+    Plane offsetP=P.offset(offset);
     ArrayList<EdgeIntersection> intersections=new ArrayList<EdgeIntersection>();
-  
+
     int es=edges.size();
     for (int i=0; i<es; i++) {
       sliceEdge(edges.get(i), offsetP, intersections);
@@ -458,7 +449,7 @@ class SliceBox {
     toPShape();
   }
 
-  void sliceEdge(Edge e,  Plane P, ArrayList<EdgeIntersection> intersections) {
+  void sliceEdge(Edge e, Plane P, ArrayList<EdgeIntersection> intersections) {
     Halfedge he=e.he;
     Halfedge hep=he.pair;
     Vertex v=he.v;
@@ -568,7 +559,7 @@ class SliceBox {
     connectHalfedges(heNew, hei);
     heNew.f=f;
     Halfedge he=hej;
-    Face nf=new Face(faces.size(),f.col);
+    Face nf=new Face(faces.size(), f.col);
     faces.add(nf);
     do {
       connectFace(nf, he); 
@@ -613,7 +604,7 @@ class SliceBox {
   }
 
   void capSlice(color col) {
-    Face cap=new Face(faces.size(),col);
+    Face cap=new Face(faces.size(), col);
     Halfedge caphe, trial;
     ArrayList<Halfedge> capHalfedges=new ArrayList<Halfedge>();
     for (Halfedge he : halfedges) {

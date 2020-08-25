@@ -97,11 +97,6 @@ class Transformation {
 }
 
 
-
-
-
-
-
 class Transform {
   float _xt, _yt, _zt, _wt;
   M44 T;
