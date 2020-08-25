@@ -41,7 +41,7 @@ void init() {
   yRolls=new HashSet<Integer>();
   zRolls=new HashSet<Integer>();
   for (int r=0; r<slices; r++) {
-    slice(r, 5.0, 0.0, color(255,0,0));
+    slice(r, 4.1, 0.0, color(255,0,0));
   }
   counter=0;
 }
@@ -115,7 +115,6 @@ Transformation sliceAndTranslate(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (xRolls.contains(roll));
     xRolls.add(roll);
-    
     origin=new PVector(-50+100*0.05*roll, 0, 0);
     normal=new PVector(random(100)<50?1:-1, 0, 0);
     direction=new PVector(0, random(100)<50?1:-1, 0);
@@ -125,7 +124,6 @@ Transformation sliceAndTranslate(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (yRolls.contains(roll));
     yRolls.add(roll);
-    
     origin=new PVector(0, -50+100*0.05*roll, 0);
     normal=new PVector(0, random(100)<50?1:-1, 0);
     direction=new PVector(0, 0, random(100)<50?1:-1);
@@ -135,7 +133,6 @@ Transformation sliceAndTranslate(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (zRolls.contains(roll));
     zRolls.add(roll);
-    
     origin=new PVector(0, 0, -50+100*0.05*roll);
     normal=new PVector(0, 0, random(100)<50?1:-1); 
     direction=new PVector(random(100)<50?1:-1, 0, 0);
@@ -145,7 +142,6 @@ Transformation sliceAndTranslate(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (xRolls.contains(roll));
     xRolls.add(roll);
-    
     origin=new PVector(-50+100*0.05*roll, 0, 0);
     normal=new PVector(random(100)<50?1:-1, 0, 0);
     direction=new PVector(0, 0, random(100)<50?1:-1);
@@ -155,7 +151,6 @@ Transformation sliceAndTranslate(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (yRolls.contains(roll));
     yRolls.add(roll);
-    
     origin=new PVector(0, -50+100*0.05*roll, 0);
     normal=new PVector(0, random(100)<50?1:-1, 0);
     direction=new PVector(random(100)<50?1:-1, 0, 0);
@@ -165,7 +160,6 @@ Transformation sliceAndTranslate(float explode, float explodePerLevel) {
       roll=(int)random(3, 18);
     } while (zRolls.contains(roll));
     zRolls.add(roll);
-    
     origin=new PVector(0, 0, -50+100*0.05*roll);
     normal=new PVector(0, 0, random(100)<50?1:-1); 
     direction=new PVector(0, random(100)<50?1:-1, 0);
