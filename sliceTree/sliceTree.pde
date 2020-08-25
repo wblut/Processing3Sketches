@@ -41,12 +41,12 @@ void init() {
   yRolls=new HashSet<Integer>();
   zRolls=new HashSet<Integer>();
   for (int r=0; r<slices; r++) {
-    slice(r, 5.0, 0.0);
+    slice(r, 5.0, 0.0, color(255,r*10,r*10));
   }
   counter=0;
 }
 
-void slice(int slicecount, float explode, float explodePerLevel) {
+void slice(int slicecount, float explode, float explodePerLevel, color col) {
   
   Transformation M;
   float roll=random(1.0);
@@ -60,7 +60,7 @@ void slice(int slicecount, float explode, float explodePerLevel) {
     M=sliceAndStretch(explode, explodePerLevel);
   } 
   M.level=slicecount;
-  tree.split(M);
+  tree.split(M, col);
 }
 
 Transformation sliceAndRotate(float explode, float explodePerLevel) {
@@ -299,7 +299,7 @@ void draw() {
   scale(zoom);
   hint(ENABLE_DEPTH_MASK);
   noStroke();
-  fill(255);
+  fill(255,25);
   tree.draw((slices+1)*(0.5-0.55*cos(radians(0.2*counter))));
   hint(DISABLE_DEPTH_MASK);
   stroke(0);

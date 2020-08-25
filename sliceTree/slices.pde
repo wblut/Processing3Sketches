@@ -19,9 +19,9 @@ class SliceTree {
     }
   }
 
-  void split(Transformation M) {
+  void split(Transformation M, color col) {
     for (Slice root : roots) {
-      root.split(M, color(255,0,0));
+      root.split(M, col);
     }
   }
 
