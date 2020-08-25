@@ -20,7 +20,7 @@ void setup() {
   smooth(16);
   noCursor();
 
-  slices=40;
+  
   init();
 }
 
@@ -30,26 +30,14 @@ void init() {
   rotationChance=random(1.0-translationChance);
   shearChance=random(1.0-translationChance-rotationChance);
   //stretchChance=1.0-translationChance-rotationChance-shearChance;
-
-  /*
-  SliceBox sliceBox=new SliceBox();
-   sliceBox.createBoxWithCenterAndSize(0,0,0,300,300,300);
-   tree=new SliceTree(sliceBox);
-   */
+  slices=25;
   ArrayList<SliceBox> sliceBoxes=new ArrayList<SliceBox>();
   SliceBox sliceBox;
-  /*
-  for(int i=0;i<10;i++){
-   sliceBox=new SliceBox();
-   sliceBox.createBoxWithCenterAndSize(-185+30*i,0,0,25,300,300);
-   sliceBoxes.add(sliceBox);
-   }
-   */
   sliceBox=new SliceBox();
   sliceBox.createBoxWithCenterAndSize(0, 0, 0, 300, 300, 300, color(255));
   sliceBoxes.add(sliceBox);
   tree=new SliceTree(sliceBoxes);
-xRolls=new HashSet<Integer>();
+  xRolls=new HashSet<Integer>();
   yRolls=new HashSet<Integer>();
   zRolls=new HashSet<Integer>();
   for (int r=0; r<slices; r++) {
