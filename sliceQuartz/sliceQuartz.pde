@@ -12,39 +12,40 @@ void create() {
   majorPlanes = new ArrayList<Plane>();
   minorPlanes = new ArrayList<Plane>();
   stock=new SliceBox();
-  
+
   //Create a slightly irregular rectangular prism wit N sides, radius varying between 90-110% radius and a "stock height" of 1.6*height;
   float radius=120;
   float prismHeight=500;
   int N=6;
   stock.createPrismWithCenterRadiusRangeAndHeight(N, 0, 0, 0, 0.9*radius, 1.1*radius, 1.6*prismHeight);
-  
+
   //Carve a crystal from the stock, by slicing it with an "umbrella" of planes
- 
+
   crystal=stock.copy();
   //Hieght of origin of slicing planes
-  float heightSpread=20;
+  float heightSpread=0;
   //Downward slope of the slicing planes
   float inclination=38;
-  float inclinationSpread=10;
+  float inclinationSpread=5;
   //Radial offset of slicing planes
   float penetration=0.7*radius;
   float penetrationSpread=0;
   //Rotation of slicing plan around height axis of stock
   float rotation=0;
-  float rotationSpread=30;
+  float rotationSpread=0;
 
   // Major facets, top and bottom
   carveCrystal(crystal, radius, N, 0.5*prismHeight, heightSpread, inclination, inclinationSpread, penetration, penetrationSpread, rotation, rotationSpread, false, majorPlanes);
   carveCrystal(crystal, radius, N, 0.5*prismHeight, heightSpread, inclination, inclinationSpread, penetration, penetrationSpread, rotation, rotationSpread, true, majorPlanes);
 
   //Minor facets, top and bottom
-  penetration=0.5*radius;//less deep
-  prismHeight-=random(0.1, 0.3)*radius;//a bit lower
+  inclination=45;
+  penetration=0.45*radius;//less deep
+  prismHeight-=120;//random(0.1, 0.3)*radius;//a bit lower
   rotation=180.0/N;// half a division rotated
   carveCrystal(crystal, radius, N, 0.5*prismHeight, heightSpread, inclination, inclinationSpread, penetration, penetrationSpread, rotation, rotationSpread, false, minorPlanes);
   carveCrystal(crystal, radius, N, 0.5*prismHeight, heightSpread, inclination, inclinationSpread, penetration, penetrationSpread, rotation, rotationSpread, true, minorPlanes);
-crystal.save(sketchPath("output.obj"));
+  crystal.save(sketchPath("output.obj"));
 }
 
 void carveCrystal(SliceBox crystal, float radius, int N, float height, float heightSpread, float inclination, float inclinationSpread, float penetration, float penetrationSpread, float rotation, float rotationSpread, boolean invert, ArrayList<Plane> planes) {
@@ -54,11 +55,11 @@ void carveCrystal(SliceBox crystal, float radius, int N, float height, float hei
   PVector origin;
 
   for (int i=0; i<N; i++) {
-    
+
     //start with horizonatl plane
     normal=new PVector(0, invert?-1:1, 0);
-    
-    
+
+
     //tilt it downwards
     dInc=random(-inclinationSpread, inclinationSpread);
     float angle=radians(inclination+dInc);
@@ -66,7 +67,7 @@ void carveCrystal(SliceBox crystal, float radius, int N, float height, float hei
     float dz=sin(angle)*normal.y+cos(angle)*normal.z;
     normal.y=dy;
     normal.z=dz;
-    
+
     //move it to its height
     dH=random(-heightSpread, heightSpread);
     origin=new PVector(0, invert?-radius:radius, invert?-height-dH:height+dH);
@@ -100,10 +101,10 @@ void draw() {
 
   hint(ENABLE_DEPTH_MASK);
   strokeWeight(1);
-  stroke(255,0,0);
+  stroke(255, 0, 0);
   noFill();
   stock.draw();
-  
+
   stroke(0);
   fill(255);
   crystal.draw();

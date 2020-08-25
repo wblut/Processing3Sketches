@@ -21,7 +21,7 @@ class SliceTree {
 
   void split(Transformation M) {
     for (Slice root : roots) {
-      root.split(M);
+      root.split(M, color(255,0,0));
     }
   }
 
@@ -71,12 +71,12 @@ class Slice {
     level=parent.level+1;
   }
 
-  void split(Transformation M) {
+  void split(Transformation M, color col) {
     if ((child1 == null) && (child2 == null)) {
       SliceBox split1=mesh.copy();
       SliceBox split2=mesh.copy();
-      split1.slice(M.origin, M.normal, 0.0);
-      split2.slice(M.origin, PVector.mult(M.normal, -1), 0.0);
+      split1.slice(M.plane, 0.0,col);
+      split2.slice(M.plane.flip(), 0.0, col);
       if (split1.vertices.size() > 0 && split1.isValid()) {
         child1 = new Slice(split1, this, null);
       }
@@ -86,10 +86,10 @@ class Slice {
       }
     } else {
       if (child1 != null) {
-        child1.split(M);
+        child1.split(M,col);
       }
       if (child2 != null) {
-        child2.split(M);
+        child2.split(M,col);
       }
     }
   }

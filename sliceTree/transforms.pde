@@ -1,12 +1,14 @@
-static final int ROTATION=1;
-static final int TRANSLATION=0;
-static final int SHEAR=2;
+static int ROTATION=1;
+static int TRANSLATION=0;
+static int SHEAR=2;
+static int STRETCH=3;
 
 
 class Transformation {
   Transform T;
+  Plane plane;
   PVector origin;
-   PVector normal;
+  PVector normal;
   PVector direction;
   PVector reverseDirection;
   float amount;
@@ -15,14 +17,16 @@ class Transformation {
   float explode;
   float explodePerLevel;
 
-//rotation
+//rotation or stretch
   Transformation(PVector origin, PVector axis, float angle, int type, float explode, float explodePerLevel) {
     this.origin=origin.copy();
     this.normal=axis.copy();
+    
     this.normal.normalize();
+    this.plane = new Plane(this.origin, this.normal); 
     this.amount=angle; 
     this.type=type;
-    assert(type==ROTATION);
+    assert(type==ROTATION|| type==STRETCH);
     this.direction=this.normal;
     this.reverseDirection=new PVector(-this.direction.x,-this.direction.y,-this.direction.z);
     this.level=0;
@@ -35,6 +39,7 @@ class Transformation {
     this.origin=origin.copy();
     this.normal=normal.copy();
     this.normal.normalize();
+     this.plane = new Plane(this.origin, this.normal); 
     this.type=type;
     assert(type==TRANSLATION || type==SHEAR);
     this.amount=amount; 
@@ -52,32 +57,41 @@ class Transformation {
  
    float fAmount=f*amount;
     T = new Transform(); 
-    if (type==0) {
+    if (type==TRANSLATION) {
       T.addTranslate(fAmount,direction);
       T.addTranslate(f*(explode+level*explodePerLevel),normal);
-    } else if (type==1) {
+    } else if (type==ROTATION) {
       T.addRotateAboutAxis(fAmount, origin, direction);
       T.addTranslate(f*(explode+level*explodePerLevel),normal);
-    } else if (type==2) {
+    } else if (type==SHEAR) {
       T.addShear(origin, normal, direction, radians((float)fAmount));
       T.addTranslate(f*(explode+level*explodePerLevel),normal);
-    } 
+    } else if (type==STRETCH) {
+      fAmount=1.0+f*(amount-1.0);
+     T.addStretch(origin, normal, fAmount);
+      T.addTranslate(f*(explode+level*explodePerLevel),normal);
+    }
     return T;
   }
 
   Transform getInverseTransform(float f) {
     float fAmount=f*amount;
     T = new Transform(); 
-    if (type==0) {
+    if (type==TRANSLATION) {
       T.addTranslate(-f*(explode+level*explodePerLevel),normal);
       T.addTranslate(fAmount,reverseDirection);
-    } else if (type==1) {
+    } else if (type==ROTATION) {
       T.addTranslate(-f*(explode+level*explodePerLevel),normal);
       T.addRotateAboutAxis(fAmount, origin, reverseDirection);
-    } else if (type==2) {
+    } else if (type==SHEAR) {
       T.addTranslate(-f*(explode+level*explodePerLevel),normal);
       T.addShear(origin, normal, reverseDirection, radians((float)fAmount));
-    } 
+    }  else if (type==STRETCH) {
+      fAmount=1.0+f*(amount-1.0);
+       T.addTranslate(-f*(explode+level*explodePerLevel),normal);
+     T.addStretch(origin, normal, 1.0/fAmount);
+     
+    }
     return T;
   }
 }
@@ -213,6 +227,43 @@ class Transform {
       1 - tmp.m33, 0, 0, 0, 0, 1);
     invT = invT.mul(Tr);
     addTranslate(origin);
+    return this;
+  }
+  
+Transform addStretch(PVector origin, PVector axis, float factor) {
+  Plane P=new Plane(origin, axis);
+    addFromWorldToCS(P.origin,P.u,P.v,P.normal);
+    float invsqrt = 1.0 / sqrt(abs(factor));
+    addScale(invsqrt, invsqrt, factor);
+    addFromCSToWorld(P.origin,P.u,P.v,P.normal);
+    return this;
+  }
+  
+  Transform addFromCSToWorld(PVector origin, PVector X, PVector Y, PVector Z) {
+    PVector ex2 = new PVector(1,0,0), ey2 = new PVector(0,1,0), ez2 =new PVector(0,0,1);
+    PVector o2 = new PVector(0,0,0);
+    float xx = ex2.dot(X);
+    float xy = ex2.dot(Y);
+    float xz = ex2.dot(Z);
+    float yx = ey2.dot(X);
+    float yy = ey2.dot(Y);
+    float yz = ey2.dot(Z);
+    float zx = ez2.dot(X);
+    float zy = ez2.dot(Y);
+    float zz = ez2.dot(Z);
+    M44 tmp = new M44(xx, xy, xz, 0, yx, yy, yz, 0, zx, zy, zz, 0, 0, 0, 0, 1);
+    M44 invtmp = new M44(xx, yx, zx, 0, xy, yy, zy, 0, xz, yz, zz, 0, 0, 0, 0, 1);
+    T = tmp.mul(T);
+    invT = invT.mul(invtmp);
+    addTranslate(origin);
+    return this;
+  }
+
+   Transform addFromWorldToCS(PVector origin, PVector X, PVector Y, PVector Z) {
+    Transform tmp=new Transform();
+    tmp.addFromCSToWorld(origin,X,Y,Z);
+     T = tmp.invT.mul(T);
+      invT = invT.mul(tmp.T);
     return this;
   }
 
