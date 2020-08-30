@@ -206,13 +206,13 @@ void gui() {
   int line=firstLine;
   if (gui) {
     fill(255);
-    text("Toggle time: spacebar", 25, line+=nextLine); 
+    text("Toggle time: spacebar", 25, line); 
     text("When frozen, rewind/forward: f/F ("+counter+")", 25, line+=nextLine); 
     text("When frozen, rotate: r/R", 25, line+=2*nextLine); 
     text("Zoom: +/-", 25, line+=nextLine); 
     text("Center: arrow keys", 25, line+=nextLine); 
     text("Toggle controls: g", 25, line+=2*nextLine);
-     text("Reset: n", 25, line); 
+     text("Reset: n", 25, line+=nextLine); 
   }
 }
 
