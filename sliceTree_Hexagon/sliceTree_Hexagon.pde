@@ -303,7 +303,7 @@ void draw() {
   directionalLight(255, 255, 255, 0, 0, -1);
   pointLight(200, 200, 200, 0, -550 , 0);
   pointLight(200, 200, 200, -800, -300, 0);
-  pointLight(200, 200, 200, 0, 0, 75 0);
+  pointLight(200, 200, 200, 0, 0, 750);
   scale(zoom);
   hint(ENABLE_DEPTH_MASK);
   noStroke();
