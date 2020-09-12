@@ -14,7 +14,7 @@ float tx, ty, ax, ay, az;
 float ttx, tty, ttz;
 float sscale;
 boolean gui;
-PShader filter, post;
+PShader filter, genFilter, post;
 color bkg;
 PImage[] textures;
 PGraphics generator;
@@ -27,7 +27,7 @@ void setup() {
   explode=0;
   numFrames=1800;
   textures=new PImage[40];
-  generator=createGraphics(800, 800);
+  generator=createGraphics(800, 800,P3D);
   generator.smooth();
   generator.beginDraw();
   generator.background(255);
@@ -39,6 +39,7 @@ void setup() {
 
 void init() {
   filter=(random(100)<50)?(random(100)<50.0)?loadShader("mirrorx.glsl"):loadShader("mirrory.glsl"):(random(100)<50.0)?loadShader("mirrorxy.glsl"):loadShader("donothing.glsl");
+ 
   int seed=(int)random(10000000);
   println(String.format("%08d", seed));
   randomSeed(seed);
@@ -61,7 +62,7 @@ void init() {
     generator.beginDraw();
     generator.background(255);
     generator.pushMatrix();
-    generator.translate(400, 400);
+    generator.translate(generator.width/2, generator.height/2);
     generator.noStroke();
     generator.fill(0);
     float d=random(20, 100);
@@ -71,6 +72,8 @@ void init() {
     for (int j=-50; j<=50; j++) {
       generator.rect(j*(d+t)-0.5*d, -10000, d, 20000);
     }
+     genFilter=(random(100)<50)?(random(100)<50.0)?loadShader("mirrorx.glsl"):loadShader("mirrory.glsl"):(random(100)<50.0)?loadShader("mirrorxy.glsl"):loadShader("donothing.glsl");
+    generator.filter(genFilter);
     generator.popMatrix();
     generator.endDraw();
     textures[i]=generator.get();
@@ -114,9 +117,13 @@ void draw() {
   background(bkg);
   filter(post);
   translate(width/2+tx, height/2+ty);
+  pointLight(255, 255, 255, 1000, 0, 0);
+  pointLight(255, 255, 255, 0, -1000, 0);
+  pointLight(255, 255, 255, 0, 0, 1000);
   rotateZ(radians(180+az));
   rotateX(radians(ax));
   rotateY(radians(ay+map(counter, 0, numFrames/2, 0, 360)));
+
   scale(zoom);
   tree.setPhase((slices+1)*phase);
   float[] extents=tree.getExtents();
