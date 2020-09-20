@@ -16,7 +16,7 @@ Transformation sliceAndRotate() {
     origin=new PVector(0, 0, posRoll);
     normal=new PVector(0, 0, random(100)<50?1:-1);
   }
-  float angle=random(100)<0?QUARTER_PI:HALF_PI;
+  float angle=radians(90);
   return new Transformation(origin, normal, angle, ROTATION);
 }
 

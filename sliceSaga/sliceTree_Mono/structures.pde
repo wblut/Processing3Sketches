@@ -657,6 +657,24 @@ class SliceBox {
       endShape(CLOSE);
     }
   }
+  
+  void draw(color col, PGraphics pg) {
+    Halfedge he;
+    for (Face f : faces) {
+      if(f.col!=color(0)){
+        pg.fill(col);
+      }else{
+       pg.fill(f.col); 
+      }
+      pg.beginShape();
+      he=f.he;
+      do {
+        pg.vertex(he.v.x, he.v.y, he.v.z);
+        he=he.next;
+      } while (he!=f.he);
+      pg.endShape(CLOSE);
+    }
+  }
 
   void indexVertices() {
     int index=0;

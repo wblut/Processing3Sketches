@@ -204,6 +204,7 @@ class SliceMesh extends Mesh {
         PVector local=P.local(caphe.v.x,caphe.v.y,caphe.v.z);
         caphe.UV=new PVector((local.x+400.0)/800.0,(local.y+400.0)/800.0);
         connectFace(cap, caphe);
+        cap.textureId=7+currentSlice;
       }
     }
     halfedges.addAll(capHalfedges);

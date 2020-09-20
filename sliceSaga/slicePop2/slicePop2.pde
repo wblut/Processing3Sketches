@@ -18,22 +18,22 @@ PShader filter, genFilter, post;
 color bkg;
 PImage[] textures;
 PGraphics generator;
-
+int currentSlice;
 void setup() {
   fullScreen(P3D);
-  smooth();
+  smooth(16);
   noCursor();
   post=loadShader("vignette.glsl");
-  explode=0;
-  numFrames=1800;
+  explode=5.0;
+  numFrames=2400;
   textures=new PImage[40];
   generator=createGraphics(800, 800,P3D);
-  generator.smooth();
+  generator.smooth(16);
   generator.beginDraw();
   generator.background(255);
   generator.endDraw();
   init();
-  bkg=color(255, 140, 11);
+  bkg=color(250,0,0);//255, 140, 11);
   textureMode(NORMAL);
 }
 
@@ -44,11 +44,11 @@ void init() {
   println(String.format("%08d", seed));
   randomSeed(seed);
   initialGeometry();
-  translationChance=0.32;
-  rotationChance=0.32;
-  shearChance=0.1;
+  translationChance=0.43;//random(1.0);
+  rotationChance=0.43;//random(1.0- translationChance);
+  shearChance=0.0;//random(1.0- translationChance-rotationChance);
   //stretchChance=1.0-translationChance-rotationChance-shearChance;
-  slices=25;
+  slices=24;
   tree=new FragmentTree(initialGeometry());
   for (int r=0; r<slices; r++) {
     slice(r, color(255), color(0));
@@ -58,13 +58,20 @@ void init() {
   tx=ty=ax=ay=az=0.0;
   freeze=false;
   gui=true;
+ 
   for (int i=0; i<40; i++) {
-    generator.beginDraw();
-    generator.background(255);
+   
+    textures[i]=getTexture();
+  }
+}
+
+PImage getTexture(){
+  generator.beginDraw();
+    generator.background(0);
     generator.pushMatrix();
     generator.translate(generator.width/2, generator.height/2);
     generator.noStroke();
-    generator.fill(0);
+    generator.fill(255);
     float d=random(20, 100);
     float t=random(20, 100);
     float a=random(PI);
@@ -72,25 +79,30 @@ void init() {
     for (int j=-50; j<=50; j++) {
       generator.rect(j*(d+t)-0.5*d, -10000, d, 20000);
     }
-     genFilter=(random(100)<50)?(random(100)<50.0)?loadShader("mirrorx.glsl"):loadShader("mirrory.glsl"):(random(100)<50.0)?loadShader("mirrorxy.glsl"):loadShader("donothing.glsl");
+    genFilter=(random(100)<50)?(random(100)<50.0)?loadShader("mirrorx.glsl"):loadShader("mirrory.glsl"):(random(100)<50.0)?loadShader("mirrorxy.glsl"):loadShader("donothing.glsl");
     generator.filter(genFilter);
     generator.popMatrix();
     generator.endDraw();
-    textures[i]=generator.get();
-  }
+    return generator.get();
+  
 }
 
 ArrayList<SliceMesh> initialGeometry() {
+  Transform T=new Transform();
+  T.addRotateY(QUARTER_PI);
+  T.addRotateX(radians(35.264));
   ArrayList<SliceMesh> sliceMeshes=new ArrayList<SliceMesh>();
   SliceMesh sliceMesh;
   sliceMesh=new SliceMesh();
-  sliceMesh.create(MeshDataFactory.createBoxWithCenterAndSize(0, 0, 0, 420, 420, 420, color(0)));
+  sliceMesh.create(MeshDataFactory.createBoxWithCenterAndSize(0, 0, 0, 300, 300, 1200, color(0)));
+  //T.apply(sliceMesh);
   sliceMeshes.add(sliceMesh);
   tree=new FragmentTree(sliceMeshes);
   return sliceMeshes;
 }
 
-void slice(int slicecount, color col, color col2) {
+void slice(int sliceCount, color col, color col2) {
+  currentSlice=sliceCount;
   Transformation M;
   int trial=0;
   do {
@@ -108,22 +120,25 @@ void slice(int slicecount, color col, color col2) {
     trial++;
   } while (tree.minDistance(M.plane)<5 && trial<20);
 
-  M.level=slicecount;
+  M.level=sliceCount;
   tree.split(M, col, col2);
 }
 
 void draw() {
+  ortho();
   float phase=0.5-0.52*cos(radians(360.0/numFrames*counter));
   background(bkg);
   filter(post);
   translate(width/2+tx, height/2+ty);
-  pointLight(255, 255, 255, 1000, 0, 0);
-  pointLight(255, 255, 255, 0, -1000, 0);
-  pointLight(255, 255, 255, 0, 0, 1000);
+  float bri=255;//(phase<0.0125)?sqrt(80.0*phase)*255:255;
+  pointLight(bri,bri,bri, 1000, 0, 0);
+  pointLight(bri,bri,bri, 0, -1000, 0);
+  pointLight(bri,bri,bri, 0, 0, 1000);
   rotateZ(radians(180+az));
   rotateX(radians(ax));
-  rotateY(radians(ay+map(counter, 0, numFrames/2, 0, 360)));
-
+  rotateY(radians(ay+map(constrain(counter-numFrames/2,0,numFrames/2), 0, numFrames/2, 0, 360)));
+  //rotateY(-QUARTER_PI);
+  //rotateX(radians(-35.264));
   scale(zoom);
   tree.setPhase((slices+1)*phase);
   float[] extents=tree.getExtents();
@@ -142,6 +157,7 @@ void draw() {
   if (counter==numFrames) {
     init();
   }
+  
 }
 
 

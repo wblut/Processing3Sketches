@@ -1,7 +1,5 @@
 class SliceTree {
   ArrayList<Slice> roots;
-  float bufferedF;
-
   SliceTree(SliceBox mesh) {
     roots=new ArrayList<Slice>();
     roots.add(new Slice(mesh));
@@ -13,7 +11,7 @@ class SliceTree {
       roots.add(new Slice(mesh));
     }
   }
-
+  
   SliceTree(SliceBox... meshes) {
     roots=new ArrayList<Slice>();
     for (SliceBox mesh : meshes) {
@@ -21,39 +19,16 @@ class SliceTree {
     }
   }
 
-  void split(Transformation M, color col, color col2) {
+  void split(Transformation M, color col) {
     for (Slice root : roots) {
-      root.split(M, col, col2);
+      root.split(M, col);
     }
   }
 
-  void setPhase(float f) {
+  void draw(double f) {
     for (Slice root : roots) {
-      root.setPhase(f);
+      root.draw(f);
     }
-  }
-
-  float[] getExtents() {
-    float[] extents=new float[]{1000000, 1000000, 1000000, -1000000, -1000000, -1000000};
-    for (Slice root : roots) {
-      root.addExtents(extents);
-    }
-    return extents;
-  }
-
-  void draw() {
-
-    for (Slice root : roots) {
-      root.draw();
-    }
-  }
-
-  float minDistance(Plane P) {
-    float minDistance=1000000;
-    for (Slice root : roots) {
-      minDistance=min(minDistance, root.minDistance(P));
-    }
-    return minDistance;
   }
 }
 
@@ -66,7 +41,6 @@ class Slice {
   SliceBox mesh;
   SliceBox invTMesh;
   SliceBox dynMesh;
-  SliceBox drawMesh;
   int level;
 
   Slice(SliceBox mesh) {
@@ -97,12 +71,12 @@ class Slice {
     level=parent.level+1;
   }
 
-  void split(Transformation M, color col, color col2) {
+  void split(Transformation M, color col) {
     if ((child1 == null) && (child2 == null)) {
       SliceBox split1=mesh.copy();
       SliceBox split2=mesh.copy();
-      split1.slice(M.plane, 0.0, col);
-      split2.slice(M.plane.flip(), 0.0, col2);
+      split1.slice(M.plane, 0.0,col);
+      split2.slice(M.plane.flip(), 0.0, col);
       if (split1.vertices.size() > 0 && split1.isValid()) {
         child1 = new Slice(split1, this, null);
       }
@@ -112,91 +86,41 @@ class Slice {
       }
     } else {
       if (child1 != null) {
-        child1.split(M, col, col2);
+        child1.split(M,col);
       }
       if (child2 != null) {
-        child2.split(M, col2, col);
+        child2.split(M,col);
       }
     }
   }
 
 
-  float minDistance(Plane P) {
-    float minDistance=1000000;
-    if (((child1 == null) && (child2 == null))) {//||f<=level) {
-      for (Vertex v : mesh.vertices) {
-        minDistance=min(minDistance, v.distance(P));
-        if(minDistance<5.0) return minDistance;
-      }
+  void draw(double f) {
+    if (((child1 == null) && (child2 == null))||f<=level) {
+      SliceBox m = getMesh(f);
+      m.draw();
     } else {
       if (child1 != null) {
-         minDistance=min(minDistance, child1.minDistance(P));
+        child1.draw(f);
       }
       if (child2 != null) {
-         minDistance=min(minDistance,  child2.minDistance(P));
-      }
-    }
-    return minDistance;
-  }
-
-  void setPhase(float f) {
-    if (((child1 == null) && (child2 == null))) {//||f<=level) {
-      drawMesh = getMesh(f);
-    } else {
-      drawMesh=null;
-      if (child1 != null) {
-        child1.setPhase(f);
-      }
-      if (child2 != null) {
-        child2.setPhase(f);
+        child2.draw(f);
       }
     }
   }
 
-  void addExtents(float[] extents) {
-    if (drawMesh!=null) {
-      float[] fragmentExtents=drawMesh.getExtents();
-      for (int i=0; i<3; i++) {
-        extents[i]=min(extents[i], fragmentExtents[i]);
-        extents[i+3]=max(extents[i+3], fragmentExtents[i+3]);
-      }
-    } else {
-      if (child1 != null) {
-        child1.addExtents(extents);
-      }
-      if (child2 != null) {
-        child2.addExtents(extents);
-      }
-    }
-  }
-
-
-  void draw() {
-    if (drawMesh!=null) {
-      drawMesh.draw();
-    } else {
-      if (child1 != null) {
-        child1.draw();
-      }
-      if (child2 != null) {
-        child2.draw();
-      }
-    }
-  }
-
-
-  SliceBox getMesh(float f) {
-    if (f<=0) {   
+  SliceBox getMesh(double f) {
+    if (f<=0) {
       return invTMesh;
-    } else if (f>=level) {   
+    } else if (f>=level) {
       return mesh;
     } else {
-
       Slice p = this;
       float fracf;
       Transform T=new Transform();
       do {
         if (p.parentToChild!=null) {
+
           fracf=constrain((float)(p.level-f), 0.0, 1.0);
           T.addTransform(p.parentToChild.getInverseTransform(fracf));
         }
@@ -204,7 +128,6 @@ class Slice {
       } while (p != null && f<p.level);
 
       T.apply(mesh, dynMesh);
-
       return dynMesh;
     }
   }
