@@ -21,25 +21,25 @@ void takeStep() {
   int step=(int)random(6.0)+1;
   switch(direction) {
   case 0:
-    for (int i=currentI-step; i<currentI; i++) {
+    for (int i=max(0,currentI-step); i<currentI; i++) {
       horSegments[currentJ][i]+=1;
     }
     currentI-=step;
     break;
   case 1:
-    for (int i=currentI; i<currentI+step; i++) {
+    for (int i=currentI; i<min(39,currentI+step); i++) {
       horSegments[currentJ][i]+=1;
     }
     currentI+=step;
     break;
   case 2:
-    for (int j=currentJ-step; j<currentJ; j++) {
+    for (int j=max(0,currentJ-step); j<currentJ; j++) {
       vertSegments[currentI][j]+=1;
     }
     currentJ-=step;
     break;
   case 3:
-    for (int j=currentJ; j<currentJ+step; j++) {
+    for (int j=currentJ; j<min(39,currentJ+step); j++) {
       vertSegments[currentI][j]+=1;
     }
     currentJ+=step;
