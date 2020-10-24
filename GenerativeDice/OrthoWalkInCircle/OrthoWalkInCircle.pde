@@ -84,7 +84,7 @@ void drawHorSegments() {
   for (int i=0; i<40; i++) {
     for (int j=0; j<=40; j++) {
       if (horSegments[j][i]>0) {
-        strokeWeight(horSegments[j][i]/0.75);
+        strokeWeight(horSegments[j][i]);
         line(i*25-500, j*25-500, i*25-475, j*25-500);
       }
     }
